@@ -4,8 +4,17 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
 
-// Popup component
-const Popup = ({ closePopup }) => (
+
+interface Question {
+  question: string;
+  answers: string[];
+  correctAnswer: string;
+}
+interface PopupProps {
+  closePopup: () => void;
+}
+
+const Popup: React.FC<PopupProps> = ({ closePopup }) => (
   <div className="popup">
     <div className="popup-inner">
       <p>Congratulations! That's the correct answer!</p>
@@ -14,7 +23,16 @@ const Popup = ({ closePopup }) => (
   </div>
 );
 
-const ResultModal = ({ isOpen, onClose, totalQuestions, correctAnswers, score, onReset }) => (
+interface ResultModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  totalQuestions: number;
+  correctAnswers: number;
+  score: number;
+  onReset: () => void;
+}
+
+const ResultModal:React.FC<ResultModalProps> = ({ isOpen, onClose, totalQuestions, correctAnswers, score, onReset }) => (
   <Modal
     isOpen={isOpen}
     onRequestClose={onClose}
@@ -70,7 +88,7 @@ export default function Start() {
     if (storedQuestions) {
       const parsedQuestions = JSON.parse(storedQuestions);
       setQuestions(parsedQuestions);
-      // Set the first question
+      // Set first question
       setCurrentQuestion(parsedQuestions[0]);
     }
   }, []);
@@ -79,7 +97,6 @@ export default function Start() {
     // Check if the selected answer is correct and update the score
     if (currentQuestion.correctAnswer === selectedAnswer) {
       setCount((prevCount) => prevCount + 1);
-      // Show the popup for correct answer
       setShowPopup(true);
     }
 
