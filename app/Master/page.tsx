@@ -4,6 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, 
 DropdownMenuSeparator, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { ChevronDown } from 'lucide-react';
+
+type Question = {
+    question: string;
+    answers: string[];
+    correctAnswer: string;
+};
+
 export default function Master() {
 
 
@@ -40,7 +47,7 @@ export default function Master() {
     };
 
     // State variables
-    const [allQuestions, setAllQuestions] = useState([]);
+    const [allQuestions, setAllQuestions] = useState<Question[]>([]);
     const [question, setQuestion] = useState('');
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [correctAnswer, setCorrectAnswer] = useState('');
@@ -83,29 +90,28 @@ export default function Master() {
         }
     }, []);
 
-    const handleSubmitClick = (e) => {
-       e.preventDefault()
+    const handleSubmitClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         if (!question.trim() || answers.some(answer => !answer.trim())) {
-           
             alert("Please fill out both the question and all answers.");
             return;
         }
-
+    
         const newQuestion = {
             question,
             answers,
             correctAnswer,
         };
-
+    
         setAllQuestions([...allQuestions, newQuestion]);
         localStorage.setItem('allQuestions', JSON.stringify([...allQuestions, newQuestion]));
-
+    
         setQuestion('');
         setAnswers(['', '', '', '']);
         setCorrectAnswer('');
     };
 
-    const handleDeleteClick = (index) => {
+    const handleDeleteClick = (index: number) => {
         const updatedQuestions = allQuestions.filter((_, i) => i !== index);
         setAllQuestions(updatedQuestions);
         localStorage.setItem('allQuestions', JSON.stringify(updatedQuestions));
@@ -117,11 +123,10 @@ export default function Master() {
      localStorage.setItem('loggedIn', loggedIn.toString());
     }, [loggedIn]);
 
-    function handleLogout(e){
+    function handleLogout(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        localStorage.setItem('loggedIn','false');
-        window.location.href="/"
-        
+        localStorage.setItem('loggedIn', 'false');
+        window.location.href = "/";
     }
 
     if (!loggedIn) {
